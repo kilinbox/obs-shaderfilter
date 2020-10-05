@@ -3,6 +3,10 @@
 // https://github.com/Oncorporation/obs-shaderfilter
 uniform float Target_Width = 320;
 uniform float Target_Height = 180;
+uniform float EndX_Offset = 0.0;
+uniform float StartX_Offset = 0.0;
+uniform float EndY_Offset = 0.0;
+uniform float StartY_Offset = 0.0;
 uniform string notes = "adjust width and height to your screen dimension";
 
 float4 mainImage(VertData v_in) : TARGET
@@ -20,7 +24,12 @@ float4 mainImage(VertData v_in) : TARGET
 	tex1.x = (((pixelX / pixelSizeX)*pixelSizeX) / uv_size.x) + (pixelSizeX / uv_size.x)/2;
 	tex1.y = (((pixelY / pixelSizeY)*pixelSizeY) / uv_size.y) + (pixelSizeY / uv_size.y)/2;
 
-	float4 c1 = image.Sample(textureSampler, tex1 );
-
+	float4 c1 = image.Sample(textureSampler, v_in.uv);
+	if ((v_in.uv.x < (EndX_Offset - 0.005)) && (v_in.uv.x > (StartX_Offset - 0.005)) &&
+	    (v_in.uv.y < (EndY_Offset - 0.005)) && (v_in.uv.y > (StartY_Offset - 0.005)))
+	{
+		c1 = image.Sample(textureSampler, tex1 );
+	}
+	
 	return c1;
 }
